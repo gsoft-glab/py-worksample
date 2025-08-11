@@ -9,7 +9,7 @@ from api.dependencies import (
     get_get_conversation_use_case,
     get_add_message_use_case
 )
-from api.models.conversation import (
+from api.models.requests import (
     CreateConversationRequest,
     AddMessageRequest
 )

@@ -1,9 +1,5 @@
-from api.models.conversation import (
+from api.models.requests import (
     CreateConversationRequest,
-    AddMessageRequest
-)
-
-from api.models.function import (
-    RegisterFunctionRequest,
+    AddMessageRequest,    
     CallFunctionRequest
 )

@@ -1,21 +1,15 @@
 from typing import List
 from domain.entities.function import Function
-from domain.repositories.abstract_repository import AbstractRepository
 from application.features.function.dtos import FunctionDTO
 from application.features.common import Result
+from infrastructure.services.function_registry import FunctionRegistry
 
 class ListFunctionsUseCase:
     """
     Use case for listing all available functions.
     """
-    def __init__(self, repository: AbstractRepository[Function]):
-        """
-        Initialize the use case with a repository.
-        
-        Args:
-            repository: The repository for retrieving functions
-        """
-        self.repository = repository
+    def __init__(self):
+        pass
     
     def execute(self) -> Result[List[FunctionDTO]]:
         """
@@ -25,7 +19,8 @@ class ListFunctionsUseCase:
             A Result containing a list of function DTOs if successful
         """
         try:
-            functions = self.repository.find_all()
+            # Get functions from the registry
+            functions = FunctionRegistry.get_available_functions()
             
             # Convert to DTOs
             function_dtos = [FunctionDTO.from_entity(function) for function in functions]
