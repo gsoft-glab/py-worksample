@@ -3,9 +3,6 @@ from pydantic import BaseModel
 from domain.entities.function_call import FunctionCall
 
 class FunctionCallDTO(BaseModel):
-    """
-    DTO for function calls.
-    """
     id: str
     function_id: str
     parameters: Dict[str, Any]
@@ -14,15 +11,7 @@ class FunctionCallDTO(BaseModel):
     
     @classmethod
     def from_entity(cls, function_call: FunctionCall):
-        """
-        Create a DTO from a function call entity.
-        
-        Args:
-            function_call: The function call entity
-            
-        Returns:
-            A new FunctionCallDTO instance
-        """
+        """Create from domain entity"""
         return cls(
             id=function_call.id,
             function_id=function_call.function_id,
@@ -32,12 +21,7 @@ class FunctionCallDTO(BaseModel):
         )
     
     def to_entity(self) -> FunctionCall:
-        """
-        Convert the DTO to a function call entity.
-        
-        Returns:
-            A new FunctionCall instance
-        """
+        """Convert to domain entity"""
         return FunctionCall(
             id=self.id,
             function_id=self.function_id,

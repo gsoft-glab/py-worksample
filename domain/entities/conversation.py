@@ -1,32 +1,38 @@
 from typing import List
 from domain.entities.message import Message
+from domain.entities.entity import Entity
 
-class Conversation:
+class Conversation(Entity):
     """
-    Base conversation class representing a conversation between a user and the assistant.
+    Base conversation class representing a private conversation between a specific owner and the assistant.
+    By default, conversations are private and restricted to the owner.
     """
-    def __init__(self, id: str, title: str):
-        self.id = id
+    def __init__(self, id: str, title: str, owner_id: str):
+        super().__init__(id)
         self.title = title
+        self.owner_id = owner_id
         self.messages: List[Message] = []
     
     def add_message(self, message: Message) -> None:
         """
         Add a message to the conversation.
         
-        This method has a contract that it will always add the message
-        to the conversation without any restrictions.
+        This method has a contract that it will only add messages from the owner
+        or the assistant to maintain privacy.
         """
+        if message.sender != self.owner_id and message.sender != "assistant":
+            raise PermissionError("Only the owner can add messages to this conversation")
+        
         self.messages.append(message)
     
     def get_messages(self) -> List[Message]:
         """
         Get all messages in the conversation.
         
-        This method has a contract that it will return all messages
-        in the conversation without any filtering.
+        This method has a contract that it will only return messages
+        from the owner and the assistant to maintain privacy.
         """
-        return self.messages
+        return [msg for msg in self.messages if msg.sender == self.owner_id or msg.sender == "assistant"]
     
     def get_message_count(self) -> int:
         """
@@ -35,26 +41,19 @@ class Conversation:
         return len(self.messages)
 
 
-class PrivateConversation(Conversation):
+class PublicConversation(Conversation):
     """
-    A private conversation that belongs to a specific owner and restricts access
-    to messages based on the sender.
+    A public conversation that allows messages from any sender and makes all messages visible.
     """
-    def __init__(self, id: str, title: str, owner_id: str):
-        super().__init__(id, title)
-        self.owner_id = owner_id
-    
     def add_message(self, message: Message) -> None:
         """
-        Only allows messages from the owner or the assistant to be added.
+        Allows messages from any sender to be added.
         """
-        if message.sender != self.owner_id and message.sender != "assistant":
-            raise PermissionError("Only the owner can add messages to this conversation")
-        
-        super().add_message(message)
+        # Bypass the permission check in the parent class
+        self.messages.append(message)
     
     def get_messages(self) -> List[Message]:
         """
-        Only returns messages from the owner and the assistant.
+        Returns all messages without filtering.
         """
-        return [msg for msg in self.messages if msg.sender == self.owner_id or msg.sender == "assistant"]
+        return self.messages

@@ -1,6 +1,7 @@
 from typing import Dict, Any, Optional
+from domain.entities.entity import Entity
 
-class FunctionCall:
+class FunctionCall(Entity):
     """
     FunctionCall entity representing a specific call to a function.
     
@@ -15,7 +16,7 @@ class FunctionCall:
         result: Optional[Dict[str, Any]] = None,
         status: str = "pending"
     ):
-        self.id = id
+        super().__init__(id)
         self.function_id = function_id
         self.parameters = parameters
         self.result = result

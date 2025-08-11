@@ -1,3 +1,2 @@
-from application.features.function.use_cases.register_function import RegisterFunctionUseCase
 from application.features.function.use_cases.list_functions import ListFunctionsUseCase
 from application.features.function.use_cases.call_function import CallFunctionUseCase

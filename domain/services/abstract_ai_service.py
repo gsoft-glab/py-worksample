@@ -5,12 +5,6 @@ from domain.entities.function import Function
 class AbstractAIService(ABC):
     """
     Service interface for interacting with AI models.
-    
-    This interface defines methods for generating responses and extracting
-    function calls from messages.
-    
-    The application layer will directly depend on a concrete implementation
-    of this interface, violating the Dependency Inversion Principle.
     """
     @abstractmethod
     def generate_response(self, message_content: str) -> str:

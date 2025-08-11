@@ -9,10 +9,7 @@ def create_app() -> FastAPI:
         version="0.1.0"
     )
     
-    # Set up exception handlers
-    setup_exception_handlers(app)
-    
-    # Set up routes
+    setup_exception_handlers(app)    
     setup_routes(app)
     
     return app

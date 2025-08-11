@@ -17,38 +17,6 @@ class FunctionParameter:
         self.description = description
         self.required = required
     
-    def to_dict(self):
-        """
-        Convert the parameter to a dictionary.
-        
-        Returns:
-            A dictionary representation of the parameter
-        """
-        return {
-            "name": self.name,
-            "type": self.type,
-            "description": self.description,
-            "required": self.required
-        }
-    
-    @classmethod
-    def from_dict(cls, data: dict) -> 'FunctionParameter':
-        """
-        Create a parameter from a dictionary.
-        
-        Args:
-            data: A dictionary containing the parameter data
-            
-        Returns:
-            A new FunctionParameter instance
-        """
-        return cls(
-            name=data.get("name", ""),
-            type=data.get("type", "string"),
-            description=data.get("description", ""),
-            required=data.get("required", False)
-        )
-    
     def __eq__(self, other):
         """
         Check if two parameters are equal.

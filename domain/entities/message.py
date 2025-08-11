@@ -1,12 +1,13 @@
-from typing import Dict, Any, List
+from typing import Dict, Any
 from datetime import datetime
+from domain.entities.entity import Entity
 
-class Message:
+class Message(Entity):
     """
     Message entity representing a message in a conversation.
     """
     def __init__(self, id: str, content: str, sender: str, conversation_id: str):
-        self.id = id
+        super().__init__(id)
         self.content = content
         self.sender = sender
         self.conversation_id = conversation_id

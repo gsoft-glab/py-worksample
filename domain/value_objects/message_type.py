@@ -7,10 +7,10 @@ class MessageType(Enum):
     This enum is used to distinguish between different types of messages
     in a conversation.
     """
-    USER = auto()          # Message from a user
-    ASSISTANT = auto()     # Message from the assistant
-    FUNCTION_CALL = auto() # Message representing a function call
-    FUNCTION_RESULT = auto() # Message representing a function result
+    USER = auto()               # Message from a user
+    ASSISTANT = auto()          # Message from the assistant
+    FUNCTION_CALL = auto()      # Message representing a function call
+    FUNCTION_RESULT = auto()    # Message representing a function result
     
     @classmethod
     def from_string(cls, value: str) -> 'MessageType':

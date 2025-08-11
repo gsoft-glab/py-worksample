@@ -1,14 +1,14 @@
-from typing import Dict, List, Any
+from typing import Dict, List
+from domain.entities.entity import Entity
 
 """
 In-memory database for entities.
 
-This module provides a simple in-memory database for entities using a dictionary.
-In a real application, this would be replaced with a persistent database.
+This module provides a simple in-memory database for entities.
 """
 
-# Global in-memory database
-database: Dict[str, List[Dict[str, Any]]] = {
+# Global in-memory database storing domain objects
+database: Dict[str, List[Entity]] = {
     "messages": [],
     "conversations": [],
     "functions": [],
@@ -28,9 +28,9 @@ def clear_database():
 
 def get_database():
     """
-    Get the database dictionary.
+    Get the database.
     
     Returns:
-        The database dictionary
+        The database containing domain object collections
     """
     return database

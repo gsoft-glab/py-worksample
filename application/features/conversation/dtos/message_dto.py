@@ -20,24 +20,6 @@ class MessageDTO(BaseModel):
             created_at=message.created_at
         )
     
-    @classmethod
-    def from_dict(cls, data: dict):
-        """Create from dictionary"""
-        from datetime import datetime
-        created_at = data.get("created_at")
-        if created_at and isinstance(created_at, str):
-            created_at = datetime.fromisoformat(created_at)
-        else:
-            created_at = datetime.now()
-            
-        return cls(
-            id=data.get("id", ""),
-            content=data.get("content", ""),
-            sender=data.get("sender", ""),
-            conversation_id=data.get("conversation_id", ""),
-            created_at=created_at
-        )
-    
     def to_entity(self) -> Message:
         """Convert to domain entity"""
         message = Message(

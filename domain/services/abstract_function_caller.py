@@ -6,9 +6,6 @@ from domain.entities.function_call import FunctionCall
 class AbstractFunctionCaller(ABC):
     """
     Service interface for calling functions.
-    
-    This interface defines methods for calling functions and validating
-    function parameters.
     """
     @abstractmethod
     def call_function(self, function: Function, parameters: Dict[str, Any]) -> FunctionCall:

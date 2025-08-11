@@ -4,9 +4,6 @@ from domain.value_objects.function_parameter import FunctionParameter
 from domain.entities.function import Function
 
 class FunctionParameterDTO(BaseModel):
-    """
-    DTO for function parameters.
-    """
     name: str
     type: str
     description: str
@@ -14,15 +11,7 @@ class FunctionParameterDTO(BaseModel):
     
     @classmethod
     def from_entity(cls, parameter: FunctionParameter):
-        """
-        Create a DTO from a parameter entity.
-        
-        Args:
-            parameter: The parameter entity
-            
-        Returns:
-            A new FunctionParameterDTO instance
-        """
+        """Create from domain entity"""
         return cls(
             name=parameter.name,
             type=parameter.type,
@@ -31,12 +20,7 @@ class FunctionParameterDTO(BaseModel):
         )
     
     def to_entity(self) -> FunctionParameter:
-        """
-        Convert the DTO to a parameter entity.
-        
-        Returns:
-            A new FunctionParameter instance
-        """
+        """Convert to domain entity"""
         return FunctionParameter(
             name=self.name,
             type=self.type,
@@ -46,9 +30,6 @@ class FunctionParameterDTO(BaseModel):
 
 
 class FunctionDTO(BaseModel):
-    """
-    DTO for functions.
-    """
     id: str
     name: str
     description: str
@@ -56,15 +37,7 @@ class FunctionDTO(BaseModel):
     
     @classmethod
     def from_entity(cls, function: Function):
-        """
-        Create a DTO from a function entity.
-        
-        Args:
-            function: The function entity
-            
-        Returns:
-            A new FunctionDTO instance
-        """
+        """Create from domain entity"""
         parameters = [FunctionParameterDTO.from_entity(param) for param in function.parameters]
         
         return cls(
@@ -75,12 +48,7 @@ class FunctionDTO(BaseModel):
         )
     
     def to_entity(self) -> Function:
-        """
-        Convert the DTO to a function entity.
-        
-        Returns:
-            A new Function instance
-        """
+        """Convert to domain entity"""
         parameters = [param.to_entity() for param in self.parameters]
         
         return Function(

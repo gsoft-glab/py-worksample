@@ -1,7 +1,8 @@
 from typing import List, Dict, Any
 from domain.value_objects.function_parameter import FunctionParameter
+from domain.entities.entity import Entity
 
-class Function:
+class Function(Entity):
     """
     Function entity representing a callable function in the AI assistant.
     
@@ -16,7 +17,7 @@ class Function:
         description: str,
         parameters: List[FunctionParameter]
     ):
-        self.id = id
+        super().__init__(id)
         self.name = name
         self.description = description
         self.parameters = parameters

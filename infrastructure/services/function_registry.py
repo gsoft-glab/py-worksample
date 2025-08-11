@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
 import uuid
 from domain.entities.function import Function
 from domain.value_objects.function_parameter import FunctionParameter
@@ -6,11 +6,6 @@ from domain.value_objects.function_parameter import FunctionParameter
 class FunctionRegistry:
     """
     Registry of available functions.
-    
-    This class provides a hardcoded list of available functions that match
-    the implementations in the FunctionCaller class. This is a deliberate
-    violation of the Open/Closed Principle, as we want to control the
-    available functions in the code rather than allowing dynamic registration.
     """
     
     @staticmethod

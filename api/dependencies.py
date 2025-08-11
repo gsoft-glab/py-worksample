@@ -38,10 +38,9 @@ def get_function_caller() -> AbstractFunctionCaller:
     return FunctionCaller()
 
 def get_message_processor(
-    function_repo: AbstractRepository[Function] = Depends(get_function_repository),
     function_caller: AbstractFunctionCaller = Depends(get_function_caller)
 ) -> AbstractMessageProcessor:
-    return MessageProcessor(function_repo, function_caller)
+    return MessageProcessor(function_caller)
 
 ###################################################################################################
 # Conversation use case dependencies
