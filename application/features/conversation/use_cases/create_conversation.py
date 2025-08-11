@@ -3,7 +3,6 @@ import uuid
 from domain.entities.conversation import Conversation, PrivateConversation
 from domain.repositories.abstract_repository import AbstractRepository
 from application.features.conversation.dtos import ConversationDTO
-from application.features.common import Result
 
 class CreateConversationUseCase:
     """
@@ -18,7 +17,7 @@ class CreateConversationUseCase:
         """
         self.repository = repository
     
-    def execute(self, title: str, owner_id: Optional[str] = None) -> Result[ConversationDTO]:
+    def execute(self, title: str, owner_id: Optional[str] = None) -> ConversationDTO:
         """
         Create a new conversation.
         
@@ -27,28 +26,25 @@ class CreateConversationUseCase:
             owner_id: The ID of the owner (for private conversations)
             
         Returns:
-            A Result containing the created conversation DTO if successful
+            The created conversation DTO
         """
-        try:
-            conversation_id = f"conv_{uuid.uuid4()}"
-            
-            if owner_id:
-                conversation = PrivateConversation(
-                    id=conversation_id,
-                    title=title,
-                    owner_id=owner_id
-                )
-            else:
-                conversation = Conversation(
-                    id=conversation_id,
-                    title=title
-                )
-            
-            self.repository.save(conversation)
-            
-            # Convert to DTO
-            conversation_dto = ConversationDTO.from_entity(conversation)
-            
-            return Result.success(conversation_dto)
-        except Exception as e:
-            return Result.failure(f"Failed to create conversation: {str(e)}")
+        conversation_id = f"conv_{uuid.uuid4()}"
+        
+        if owner_id:
+            conversation = PrivateConversation(
+                id=conversation_id,
+                title=title,
+                owner_id=owner_id
+            )
+        else:
+            conversation = Conversation(
+                id=conversation_id,
+                title=title
+            )
+        
+        self.repository.save(conversation)
+        
+        # Convert to DTO
+        conversation_dto = ConversationDTO.from_entity(conversation)
+        
+        return conversation_dto

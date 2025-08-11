@@ -4,7 +4,7 @@ from domain.entities.function import Function
 from domain.entities.function_call import FunctionCall
 from domain.services.abstract_function_caller import AbstractFunctionCaller
 from application.features.function.dtos.function_call_dto import FunctionCallDTO
-from application.features.common import Result
+from application.exceptions import NotFoundException, ValidationException
 from infrastructure.services.function_registry import FunctionRegistry
 
 class CallFunctionUseCase:
@@ -32,7 +32,7 @@ class CallFunctionUseCase:
         self,
         function_name: str,
         arguments: Dict[str, Any]
-    ) -> Result[FunctionCallDTO]:
+    ) -> FunctionCallDTO:
         """
         Call a function and return a DTO with the result.
         
@@ -41,24 +41,25 @@ class CallFunctionUseCase:
             arguments: The arguments to pass to the function
             
         Returns:
-            A Result containing the function call DTO if successful
+            The function call DTO
+            
+        Raises:
+            ValidationException: If function name is missing
+            NotFoundException: If function is not found
         """
-        try:
-            if not function_name:
-                return Result.failure("Function name is required")
-            
-            # Find the function by name from the registry
-            function = FunctionRegistry.get_function_by_name(function_name)
-            
-            if not function:
-                return Result.failure(f"Function '{function_name}' not found")
-            
-            # Call the function using the function caller service
-            function_call = self.function_caller.call_function(function, arguments)
-            
-            # Convert to DTO
-            function_call_dto = FunctionCallDTO.from_entity(function_call)
-            
-            return Result.success(function_call_dto)
-        except Exception as e:
-            return Result.failure(f"Failed to call function: {str(e)}")
+        if not function_name:
+            raise ValidationException("Function name is required")
+        
+        # Find the function by name from the registry
+        function = FunctionRegistry.get_function_by_name(function_name)
+        
+        if not function:
+            raise NotFoundException(f"Function '{function_name}' not found")
+        
+        # Call the function using the function caller service
+        function_call = self.function_caller.call_function(function, arguments)
+        
+        # Convert to DTO
+        function_call_dto = FunctionCallDTO.from_entity(function_call)
+        
+        return function_call_dto

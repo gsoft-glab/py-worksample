@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends
 from application.features.conversation.use_cases.create_conversation import CreateConversationUseCase
 from application.features.conversation.use_cases.get_conversation import GetConversationUseCase
 from application.features.conversation.use_cases.add_message import AddMessageUseCase
@@ -18,54 +18,35 @@ from typing import List
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 
 
-@router.post("/", response_model=ConversationDTO)
+@router.post("/", response_model=ConversationDTO, summary="Create a new conversation with the specified title and owner.")
 async def create_conversation(
     request: CreateConversationRequest,
     use_case: CreateConversationUseCase = Depends(get_create_conversation_use_case)
 ) -> ConversationDTO:
-    result = use_case.execute(request.title, request.owner_id)
-    
-    if result.is_failure():
-        raise HTTPException(status_code=400, detail=result.error)
-    
-    return result.get_value()
+    return use_case.execute(request.title, request.owner_id)
 
 
-@router.get("/{conversation_id}", response_model=ConversationDTO)
+@router.get("/{conversation_id}", response_model=ConversationDTO, summary="Retrieve a specific conversation by its unique identifier.")
 async def get_conversation(
     conversation_id: str,
     use_case: GetConversationUseCase = Depends(get_get_conversation_use_case)
 ) -> ConversationDTO:
-    result = use_case.execute(conversation_id)
-    
-    if result.is_failure():
-        raise HTTPException(status_code=404, detail=result.error)
-    
-    return result.get_value()
+    return use_case.execute(conversation_id)
 
 
-@router.get("/{conversation_id}/messages", response_model=List[MessageDTO])
+@router.get("/{conversation_id}/messages", response_model=List[MessageDTO], summary="Get all messages belonging to a specific conversation.")
 async def get_conversation_messages(
     conversation_id: str,
     use_case: GetConversationUseCase = Depends(get_get_conversation_use_case)
 ) -> List[MessageDTO]:
-    result = use_case.execute(conversation_id)
-    
-    if result.is_failure():
-        raise HTTPException(status_code=404, detail=result.error)
-    
-    return result.get_value().messages
+    conversation = use_case.execute(conversation_id)
+    return conversation.messages
 
 
-@router.post("/{conversation_id}/messages", response_model=MessageDTO)
+@router.post("/{conversation_id}/messages", response_model=MessageDTO, summary="Add a new message to an existing conversation.")
 async def add_message(
     conversation_id: str,
     request: AddMessageRequest,
     use_case: AddMessageUseCase = Depends(get_add_message_use_case)
 ) -> MessageDTO:
-    result = use_case.execute(conversation_id, request.content, request.sender)
-    
-    if result.is_failure():
-        raise HTTPException(status_code=404, detail=result.error)
-    
-    return result.get_value()
+    return use_case.execute(conversation_id, request.content, request.sender)

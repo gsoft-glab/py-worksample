@@ -3,7 +3,7 @@ from domain.entities.conversation import Conversation
 from domain.entities.message import Message
 from domain.repositories.abstract_repository import AbstractRepository
 from application.features.conversation.dtos import ConversationDTO, MessageDTO
-from application.features.common import Result
+from application.exceptions import NotFoundException
 
 class GetConversationUseCase:
     """
@@ -24,7 +24,7 @@ class GetConversationUseCase:
         self.conversation_repository = conversation_repository
         self.message_repository = message_repository
     
-    def execute(self, conversation_id: str) -> Result[ConversationDTO]:
+    def execute(self, conversation_id: str) -> ConversationDTO:
         """
         Get a conversation by ID along with its messages.
         
@@ -32,25 +32,25 @@ class GetConversationUseCase:
             conversation_id: The ID of the conversation to retrieve
             
         Returns:
-            A Result containing the conversation DTO with messages if successful
+            The conversation DTO with messages
+            
+        Raises:
+            NotFoundException: If conversation not found
         """
-        try:
-            # Get the conversation
-            conversation = self.conversation_repository.find_by_id(conversation_id)
-            
-            if not conversation:
-                return Result.failure("Conversation not found")
-            
-            # Get messages for the conversation
-            message_entities = self.message_repository.find_messages_by_conversation_id(conversation_id)
-            
-            # Convert to DTOs
-            conversation_dto = ConversationDTO.from_entity(conversation)
-            message_dtos = [MessageDTO.from_entity(msg) for msg in message_entities]
-            
-            # Add messages to the conversation DTO
-            conversation_dto.messages = message_dtos
-            
-            return Result.success(conversation_dto)
-        except Exception as e:
-            return Result.failure(f"Failed to get conversation: {str(e)}")
+        # Get the conversation
+        conversation = self.conversation_repository.find_by_id(conversation_id)
+        
+        if not conversation:
+            raise NotFoundException(f"Conversation with ID {conversation_id} not found")
+        
+        # Get messages for the conversation
+        message_entities = self.message_repository.find_messages_by_conversation_id(conversation_id)
+        
+        # Convert to DTOs
+        conversation_dto = ConversationDTO.from_entity(conversation)
+        message_dtos = [MessageDTO.from_entity(msg) for msg in message_entities]
+        
+        # Add messages to the conversation DTO
+        conversation_dto.messages = message_dtos
+        
+        return conversation_dto

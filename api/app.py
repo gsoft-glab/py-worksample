@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from api.routes import setup_routes
+from api.middleware.exception_handler import setup_exception_handlers
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -8,6 +9,10 @@ def create_app() -> FastAPI:
         version="0.1.0"
     )
     
+    # Set up exception handlers
+    setup_exception_handlers(app)
+    
+    # Set up routes
     setup_routes(app)
     
     return app

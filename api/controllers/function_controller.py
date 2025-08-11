@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends
 from application.features.function.use_cases.list_functions import ListFunctionsUseCase
 from application.features.function.use_cases.call_function import CallFunctionUseCase
 from application.features.function.dtos.function_dto import FunctionDTO
@@ -15,29 +15,19 @@ from typing import List
 router = APIRouter(prefix="/functions", tags=["functions"])
 
 
-@router.get("/", response_model=List[FunctionDTO])
+@router.get("/", response_model=List[FunctionDTO], summary="Retrieve a list of all available functions that can be called by the API.")
 async def list_functions(
     use_case: ListFunctionsUseCase = Depends(get_list_functions_use_case)
 ) -> List[FunctionDTO]:
-    result = use_case.execute()
-    
-    if result.is_failure():
-        raise HTTPException(status_code=500, detail=result.error)
-    
-    return result.get_value()
+    return use_case.execute()
 
 
-@router.post("/call", response_model=FunctionCallDTO)
+@router.post("/call", response_model=FunctionCallDTO, summary="Execute a specific function by name with the provided arguments and return the result.")
 async def call_function(
     request: CallFunctionRequest,
     use_case: CallFunctionUseCase = Depends(get_call_function_use_case)
 ) -> FunctionCallDTO:
-    result = use_case.execute(
+    return use_case.execute(
         function_name=request.name,
         arguments=request.arguments
     )
-    
-    if result.is_failure():
-        raise HTTPException(status_code=404, detail=result.error)
-    
-    return result.get_value()

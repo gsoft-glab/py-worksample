@@ -5,7 +5,7 @@ from domain.entities.message import Message
 from domain.repositories.abstract_repository import AbstractRepository
 from domain.services.abstract_message_processor import AbstractMessageProcessor
 from application.features.conversation.dtos import MessageDTO
-from application.features.common import Result
+from application.exceptions import NotFoundException
 
 class AddMessageUseCase:
     """
@@ -34,7 +34,7 @@ class AddMessageUseCase:
         conversation_id: str,
         content: str,
         sender: str = "user"
-    ) -> Result[MessageDTO]:
+    ) -> MessageDTO:
         """
         Add a message to a conversation.
         
@@ -44,39 +44,39 @@ class AddMessageUseCase:
             sender: The sender of the message (default: "user")
             
         Returns:
-            A Result containing the created message DTO if successful
+            The created message DTO
+            
+        Raises:
+            NotFoundException: If conversation not found
         """
-        try:
-            # Check if conversation exists
-            conversation = self.conversation_repository.find_by_id(conversation_id)
-            if not conversation:
-                return Result.failure("Conversation not found")
-            
-            # Create and save the message
-            message = Message(
-                id=f"msg_{uuid.uuid4()}",
-                content=content,
-                sender=sender,
-                conversation_id=conversation_id
-            )
-            self.message_repository.save(message)
-            
-            # Add message to conversation entity
-            conversation.add_message(message)
-            self.conversation_repository.save(conversation)
-            
-            # Convert to DTO
-            message_dto = MessageDTO.from_entity(message)
-            
-            # If it's a user message, process it to generate a response
-            if sender == "user":
-                # Process the message and generate a response
-                response = self.message_processor.process(message)
-                if response:
-                    self.message_repository.save(response)
-                    conversation.add_message(response)
-                    self.conversation_repository.save(conversation)
-            
-            return Result.success(message_dto)
-        except Exception as e:
-            return Result.failure(f"Failed to add message: {str(e)}")
+        # Check if conversation exists
+        conversation = self.conversation_repository.find_by_id(conversation_id)
+        if not conversation:
+            raise NotFoundException(f"Conversation with ID {conversation_id} not found")
+        
+        # Create and save the message
+        message = Message(
+            id=f"msg_{uuid.uuid4()}",
+            content=content,
+            sender=sender,
+            conversation_id=conversation_id
+        )
+        self.message_repository.save(message)
+        
+        # Add message to conversation entity
+        conversation.add_message(message)
+        self.conversation_repository.save(conversation)
+        
+        # Convert to DTO
+        message_dto = MessageDTO.from_entity(message)
+        
+        # If it's a user message, process it to generate a response
+        if sender == "user":
+            # Process the message and generate a response
+            response = self.message_processor.process(message)
+            if response:
+                self.message_repository.save(response)
+                conversation.add_message(response)
+                self.conversation_repository.save(conversation)
+        
+        return message_dto
