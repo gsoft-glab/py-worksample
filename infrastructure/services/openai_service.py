@@ -18,15 +18,6 @@ class OpenAIService(AbstractAIService):
         self.api_key = api_key
     
     def generate_response(self, message_content: str) -> str:
-        """
-        Generate a response to a message.
-        
-        Args:
-            message_content: The content of the message to respond to
-            
-        Returns:
-            The generated response
-        """
         # In a real implementation, this would call the OpenAI API
         responses = [
             "I'm an AI assistant. How can I help you?",
@@ -44,16 +35,6 @@ class OpenAIService(AbstractAIService):
             return random.choice(responses)
     
     def extract_function_calls(self, message_content: str, available_functions: List[Function]) -> List[Dict[str, Any]]:
-        """
-        Extract function calls from a message.
-        
-        Args:
-            message_content: The content of the message to extract function calls from
-            available_functions: The list of available functions
-            
-        Returns:
-            A list of function calls extracted from the message
-        """
         # In a real implementation, this would use the OpenAI API to extract function calls        
         function_calls = []
         
