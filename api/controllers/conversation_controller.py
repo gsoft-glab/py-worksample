@@ -43,10 +43,10 @@ async def get_conversation_messages(
     return conversation.messages
 
 
-@router.post("/{conversation_id}/messages", response_model=MessageDTO, summary="Add a new message to an existing conversation.")
+@router.post("/{conversation_id}/messages", response_model=List[MessageDTO], summary="Add a new message to an existing conversation.")
 async def add_message(
     conversation_id: str,
     request: AddMessageRequest,
     use_case: AddMessageUseCase = Depends(get_add_message_use_case)
-) -> MessageDTO:
-    return use_case.execute(conversation_id, request.content, request.sender)
+) -> List[MessageDTO]:
+    return use_case.execute(conversation_id, request.content, request.owner_id)

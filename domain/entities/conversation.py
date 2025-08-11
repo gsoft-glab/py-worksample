@@ -20,7 +20,7 @@ class Conversation(Entity):
         This method has a contract that it will only add messages from the owner
         or the assistant to maintain privacy.
         """
-        if message.sender != self.owner_id and message.sender != "assistant":
+        if message.owner_id != self.owner_id and message.sender != "assistant":
             raise PermissionError("Only the owner can add messages to this conversation")
         
         self.messages.append(message)

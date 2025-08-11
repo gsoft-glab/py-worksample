@@ -13,7 +13,7 @@ class CreateConversationRequest(BaseModel):
 class AddMessageRequest(BaseModel):
     """Request model for adding a message to a conversation"""
     content: str = Field(description="The content of the message")
-    sender: str = Field(default="user", description="The sender of the message")
+    owner_id: Optional[str] = Field(default=None, description="The ID of the owner (for private conversations)")
 
 ###################################################################################################
 # Function Models

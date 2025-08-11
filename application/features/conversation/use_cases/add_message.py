@@ -5,6 +5,7 @@ from domain.repositories.abstract_repository import AbstractRepository
 from domain.services.abstract_message_processor import AbstractMessageProcessor
 from application.features.conversation.dtos import MessageDTO
 from application.exceptions import NotFoundException
+from typing import List
 
 class AddMessageUseCase:
     """
@@ -24,8 +25,8 @@ class AddMessageUseCase:
         self,
         conversation_id: str,
         content: str,
-        sender: str = "user"
-    ) -> MessageDTO:
+        owner_id: str
+    ) -> List[MessageDTO]:
         conversation = self.conversation_repository.find_by_id(conversation_id)
         if not conversation:
             raise NotFoundException(f"Conversation with ID {conversation_id} not found")
@@ -33,7 +34,8 @@ class AddMessageUseCase:
         message = Message(
             id=f"msg_{uuid.uuid4()}",
             content=content,
-            sender=sender,
+            owner_id=owner_id,
+            sender="user",
             conversation_id=conversation_id
         )
         self.message_repository.save(message)
@@ -42,13 +44,16 @@ class AddMessageUseCase:
         self.conversation_repository.save(conversation)
         
         message_dto = MessageDTO.from_entity(message)
+        messages = [message_dto]
         
-        if sender == "user":
+        if message.sender == "user":
             # Process the message and generate a response
             response = self.message_processor.process(message)
             if response:
                 self.message_repository.save(response)
                 conversation.add_message(response)
                 self.conversation_repository.save(conversation)
+                response_dto = MessageDTO.from_entity(response)
+                messages.append(response_dto)
         
-        return message_dto
+        return messages
