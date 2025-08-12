@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, override
 from domain.entities.message import Message
 from domain.entities.entity import Entity
 
@@ -45,6 +45,7 @@ class PublicConversation(Conversation):
     """
     A public conversation that allows messages from any sender and makes all messages visible.
     """
+    @override
     def add_message(self, message: Message) -> None:
         """
         Allows messages from any sender to be added.
@@ -52,6 +53,7 @@ class PublicConversation(Conversation):
         # Bypass the permission check in the parent class
         self.messages.append(message)
     
+    @override
     def get_messages(self) -> List[Message]:
         """
         Returns all messages without filtering.

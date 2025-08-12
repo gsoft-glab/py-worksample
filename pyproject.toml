@@ -12,5 +12,6 @@ dependencies = [
 [dependency-groups]
 dev = [
     "gradio>=5.42.0",
+    "pytest>=8.4.1",
     "requests>=2.32.4",
 ]

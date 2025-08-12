@@ -16,7 +16,7 @@ router = APIRouter(prefix="/functions", tags=["functions"])
 
 
 @router.get("/", response_model=List[FunctionDTO], summary="Retrieve a list of all available functions that can be called by the API.")
-async def list_functions(
+def list_functions(
     use_case: ListFunctionsUseCase = Depends(get_list_functions_use_case)
 ) -> List[FunctionDTO]:
     return use_case.execute()

@@ -19,7 +19,7 @@ router = APIRouter(prefix="/conversations", tags=["conversations"])
 
 
 @router.post("/", response_model=ConversationDTO, summary="Create a new conversation with the specified title and owner.")
-async def create_conversation(
+def create_conversation(
     request: CreateConversationRequest,
     use_case: CreateConversationUseCase = Depends(get_create_conversation_use_case)
 ) -> ConversationDTO:
@@ -27,7 +27,7 @@ async def create_conversation(
 
 
 @router.get("/{conversation_id}", response_model=ConversationDTO, summary="Retrieve a specific conversation by its unique identifier.")
-async def get_conversation(
+def get_conversation(
     conversation_id: str,
     use_case: GetConversationUseCase = Depends(get_get_conversation_use_case)
 ) -> ConversationDTO:
@@ -35,7 +35,7 @@ async def get_conversation(
 
 
 @router.get("/{conversation_id}/messages", response_model=List[MessageDTO], summary="Get all messages belonging to a specific conversation.")
-async def get_conversation_messages(
+def get_conversation_messages(
     conversation_id: str,
     use_case: GetConversationUseCase = Depends(get_get_conversation_use_case)
 ) -> List[MessageDTO]:
@@ -44,7 +44,7 @@ async def get_conversation_messages(
 
 
 @router.post("/{conversation_id}/messages", response_model=List[MessageDTO], summary="Add a new message to an existing conversation.")
-async def add_message(
+def add_message(
     conversation_id: str,
     request: AddMessageRequest,
     use_case: AddMessageUseCase = Depends(get_add_message_use_case)

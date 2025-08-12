@@ -1,95 +1,81 @@
-# AI Assistant with Function Calling Capabilities
+# AI Assistant with Function Calling
 
-This project implements an AI assistant that can understand natural language requests and execute functions based on those requests.
+A Python-based AI assistant that processes natural language requests and executes appropriate functions.
+
+## Features
+
+- **Natural Language Processing**: Understands user requests and identifies required functions
+- **Function Calling**: Automatically extracts parameters and executes functions
+- **REST API**: FastAPI backend with conversation and function endpoints
+- **Chat Interface**: Gradio UI for interactive conversations
+- **Supported Functions**: Weather information, time queries, and basic calculations
 
 ## Project Structure
 
 The project is organized into four layers:
 
-1. **API Layer**: Handles HTTP requests/responses, routing, and controllers for the REST API endpoints
-2. **Domain Layer**: Contains core business logic, entities, and interfaces
-3. **Application Layer**: Orchestrates use cases and transforms data between layers
-4. **Infrastructure Layer**: Provides concrete implementations and external service integrations
+1. **API Layer**: Handles HTTP requests/responses and routing
+2. **Application Layer**: Orchestrates use cases and transforms data
+3. **Domain Layer**: Contains core business logic and entities
+4. **Infrastructure Layer**: Provides implementations and integrations
 
-## Running the Application
+## Quick Start
 
-### Backend API
+### Prerequisites
+- Python 3.12+
+- [uv](https://github.com/astral-sh/uv) package manager
 
-1. Install dependencies using uv:
+### Installation & Setup
+
+1. Install dependencies:
    ```
    uv sync
    ```
 
-2. Run the application using uvicorn (or launch with vscode):
+2. Start the backend API:
    ```
    python -m uvicorn main:app --reload
    ```
+   Access API docs at http://127.0.0.1:8000/docs
 
-3. Open your browser and navigate to:
-   - API documentation: http://127.0.0.1:8000/docs
-   - API root: http://127.0.0.1:8000/
-
-### Gradio UI
-
-The project includes a Gradio-based chat interface for interacting with the AI assistant:
-
-1. Make sure the backend API is running (see above)
-
-2. Start the Gradio UI:
+3. In a new terminal, start the Gradio UI:
    ```
    python gradio_ui.py
    ```
-
-3. Open your browser and navigate to the URL displayed in the terminal (typically http://127.0.0.1:7860)
+   Access the chat interface at http://127.0.0.1:7860
 
 ## API Endpoints
 
-### Conversations
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/conversations/` | POST | Create a new conversation |
+| `/api/conversations/{id}` | GET | Get conversation by ID |
+| `/api/conversations/{id}/messages` | GET | Get conversation messages |
+| `/api/conversations/{id}/messages` | POST | Add message to conversation |
+| `/api/functions/` | GET | List available functions |
+| `/api/functions/call` | POST | Call a function |
 
-- `POST /api/conversations/`: Create a new conversation
-- `GET /api/conversations/{conversation_id}`: Get a conversation by ID
-- `GET /api/conversations/{conversation_id}/messages`: Get all messages in a conversation
-- `POST /api/conversations/{conversation_id}/messages`: Add a message to a conversation
+## Using the Chat Interface
 
-### Functions
-
-- `GET /api/functions/`: List all registered functions
-- `POST /api/functions/call`: Call a function
-
-## Gradio UI
-
-The Gradio UI provides a user-friendly chat interface to interact with the AI assistant.
-
-### Example Prompts
-
-Try these example prompts to see the function calling capabilities in action:
-
-1. **Weather Function**:
-   - "What's the weather like in New York?"
-   - "Tell me the forecast for San Francisco"
-   - "Is it sunny in Miami?"
-
-2. **Time Function**:
-   - "What time is it now?"
-   - "Tell me the current time in UTC"
-   - "What's the time in London?"
-
-3. **Calculator Function**:
-   - "Can you add 5 + 3 for me?"
-   - "What's 10 multiplied by 7?"
-   - "Calculate 100 divided by 4"
+The Gradio UI provides a simple chat interface. Try these example prompts:
+- "What's the weather in New York?"
+- "What time is it now?"
+- "Calculate 15 × 7"
 
 ## Implementation Notes
 
-- **In-Memory Storage**: The project uses in-memory storage for simplicity
-- **Mocked AI Service**: The AI assistant functionality is mocked for demonstration purposes
-- **Function Calling**: The system can detect when a user's message implies a function call, extract relevant parameters, and execute the function
-- **Supported Functions**: The system includes three mock functions:
-  - `get_weather`: Returns weather information for a location
-  - `get_time`: Returns the current time for a timezone
-  - `calculate`: Performs basic arithmetic operations
+- Uses in-memory storage for simplicity
+- AI service is mocked for demonstration
 
-## Future Improvements
+## Testing
+
+Run the test suite:
+```
+python -m pytest tests/
+```
+
+## Planned Features
 
 1. Implement API key authorization for secure access to the API endpoints
 2. Add a `generate_random_number` function that generates a random number within a specified range
+3. Create an endpoint to generate summaries of conversations
