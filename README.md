@@ -34,13 +34,13 @@ The project is organized into four layers:
 
 2. Start the backend API:
    ```
-   python -m uvicorn main:app --reload
+   uv run python -m uvicorn main:app --reload
    ```
    Access API docs at http://127.0.0.1:8000/docs
 
 3. In a new terminal, start the Gradio UI:
    ```
-   python gradio_ui.py
+   uv run python gradio_ui.py
    ```
    Access the chat interface at http://127.0.0.1:7860
 
